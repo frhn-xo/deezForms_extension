@@ -1,7 +1,5 @@
 function logForm() {
-
-    let jsonData = {}
-
+    let formData = {};
     let labels = document.querySelectorAll('.M7eMe');
 
     labels.forEach((e, i) => {
@@ -27,6 +25,9 @@ function logForm() {
 
             input.value = "input filler";
 
+            formData[index] = { label: label.trim() };
+            formData[index].type = "short";
+
             console.log(input.value);
 
         } else if (textArea) {
@@ -38,36 +39,37 @@ function logForm() {
 
             textArea.value = "textarea filler"
 
+            formData[index] = { label: label.trim() };
+            formData[index].type = "long";
+
         } else {
             console.log("nada");
         }
-
-        jsonData[label] = "";
     });
 
+    console.log(formData);
+}
 
-    console.log(jsonData);
+function apicall() {
+    let apiData = {};
 
-
-    function apicall() {
-        fetch('https://6383-2401-4900-1cb4-c5f-ad4d-a09c-82c8-f496.ngrok-free.app/api/custom', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(jsonData)
+    fetch('https://6383-2401-4900-1cb4-c5f-ad4d-a09c-82c8-f496.ngrok-free.app/api/custom', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-            })
-            .catch(error => {
-                console.log('Error: ' + error);
-            });
-    }
-    // apicall();
+        .catch(error => {
+            console.log('Error: ' + error);
+        });
 }
 
 console.log("\"brrr deezForms 😶‍🌫️\"");
 
 logForm();
+// apicall();
