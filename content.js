@@ -1,4 +1,40 @@
 let formData = {};
+let formArray = {};
+let resposeData = {};
+
+function triggerFocus(element, text) {
+    console.log(element, text);
+    let eventType = "onfocusin" in element ? "focusin" : "focus";
+    let bubbles = "onfocusin" in element;
+    let event;
+
+    if ("Event" in window) {
+        event = new Event(eventType, { bubbles: bubbles, cancelable: true });
+    }
+
+    setTimeout(() => {
+        element.focus();
+        element.dispatchEvent(event);
+        function simulateHumanTyping(inputElement, text) {
+            var inputEvent = new Event('input', { bubbles: true });
+            var index = 0;
+
+            function typeCharacter() {
+                if (index < text.length) {
+                    inputElement.value += text[index];
+                    inputElement.dispatchEvent(inputEvent);
+                    index++;
+                    setTimeout(typeCharacter, 200);
+                }
+            }
+
+            typeCharacter();
+        }
+
+        simulateHumanTyping(element, text);
+    }, 500);
+}
+
 function logForm() {
     let labels = document.querySelectorAll('.M7eMe');
 
@@ -23,50 +59,14 @@ function logForm() {
                 placeHolder.remove();
             }
 
-            // start
+            // start filling
 
-            function triggerFocus(element) {
-                // console.log(input);
-                console.log("inside trig func");
-                let eventType = "onfocusin" in element ? "focusin" : "focus";
-                let bubbles = "onfocusin" in element;
-                let event;
+            // triggerFocus(input, "i will fill input");
 
-                if ("Event" in window) {
-                    event = new Event(eventType, { bubbles: bubbles, cancelable: true });
-                }
+            // end filling
 
-                setTimeout(() => {
-                    element.focus();
-                    element.dispatchEvent(event);
-                    console.log("end of settimeout");
-                    // input.value = "input fillu";
-                    function simulateHumanTyping(inputElement, text) {
-                        var inputEvent = new Event('input', { bubbles: true });
-                        var index = 0;
-
-                        function typeCharacter() {
-                            if (index < text.length) {
-                                inputElement.value += text[index];
-                                inputElement.dispatchEvent(inputEvent);
-                                index++;
-                                setTimeout(typeCharacter, 200); // Adjust the timing as needed
-                            }
-                        }
-
-                        typeCharacter();
-                    }
-
-                    simulateHumanTyping(element, "hello");
-                }, 1000);
-            }
-
-            triggerFocus(input);
-
-            // end
-
-            formData[index] = { label: label.trim() };
-            formData[index].type = "short";
+            formArray[index] = input;
+            formData[index] = label.trim();
 
             console.log(input.value);
 
@@ -77,51 +77,14 @@ function logForm() {
                 placeHolder.remove();
             }
 
-            // textArea.value = "textarea filler"
-            // start
+            // start filling
 
-            function triggerFocus(element) {
-                // console.log(input);
-                console.log("inside trig func");
-                let eventType = "onfocusin" in element ? "focusin" : "focus";
-                let bubbles = "onfocusin" in element;
-                let event;
+            // triggerFocus(textArea, "i will fill text area");
 
-                if ("Event" in window) {
-                    event = new Event(eventType, { bubbles: bubbles, cancelable: true });
-                }
+            // end filling
 
-                setTimeout(() => {
-                    element.focus();
-                    element.dispatchEvent(event);
-                    console.log("end of settimeout");
-                    // input.value = "textu fillu";
-                    function simulateHumanTyping(inputElement, text) {
-                        var inputEvent = new Event('input', { bubbles: true });
-                        var index = 0;
-
-                        function typeCharacter() {
-                            if (index < text.length) {
-                                inputElement.value += text[index];
-                                inputElement.dispatchEvent(inputEvent);
-                                index++;
-                                setTimeout(typeCharacter, 200); // Adjust the timing as needed
-                            }
-                        }
-
-                        typeCharacter();
-                    }
-
-                    simulateHumanTyping(element, "hello");
-                }, 1000);
-            }
-
-            triggerFocus(textArea);
-
-            // end
-
-            formData[index] = { label: label.trim() };
-            formData[index].type = "long";
+            formArray[index] = textArea;
+            formData[index] = label.trim();
 
         } else {
             console.log("nada");
@@ -129,27 +92,63 @@ function logForm() {
     });
 }
 
-function apicall() {
+function apiCall() {
+    // Define the JSON data
 
-    fetch('http://192.168.234.39:5000/api/custom', {
+    formData.emailid = "nisarvskp@gmail.com";
+    fetch('https://1a7d-49-249-72-18.ngrok-free.app/api/fillme', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json' // Set the content type to JSON
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData) // Convert JSON object to string
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            JSON.stringify(data);
+            resposeData = data;
+            fillForm();
         })
         .catch(error => {
-            console.log('Error: ' + error);
+            console.log("error");
         });
-    console.log("callin nisar");
+};
+
+function fillForm() {
+    if (!resposeData || Object.keys(resposeData).length !== Object.keys(formArray).length) {
+        console.log("Invalid response data or data mismatch");
+        return;
+    }
+
+    for (let index = 1; index <= Object.keys(formArray).length; index++) {
+        const inputElement = formArray[index];
+        const responseText = resposeData[index];
+
+        if (inputElement && responseText) {
+            triggerFocus(inputElement, responseText);
+        } else {
+            console.log("Invalid input element or missing response text for index " + index);
+        }
+    }
 }
+
 
 console.log("\"brrr deezForms 😶‍🌫️\"");
 
+function performMagic() {
+    // Your code here
+    console.log("Magic button clicked!");
+    // You can replace the console.log with any other actions you want to perform.
+}
+
+// Find the button by its ID and add a click event listener
+const magicButton = document.getElementById("magic");
+
+if (magicButton) {
+    magicButton.addEventListener("click", performMagic);
+}
+
 logForm();
 console.log(formData);
-// apicall();
+console.log(formArray);
+apiCall();
