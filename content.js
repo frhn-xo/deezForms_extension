@@ -148,7 +148,27 @@ if (magicButton) {
     magicButton.addEventListener("click", performMagic);
 }
 
+function dothething() {
 logForm();
 console.log(formData);
 console.log(formArray);
 apiCall();
+}
+
+// Select the div element
+const divElement = document.querySelector("#mG61Hd > div.RH5hzf.RLS9Fe > div > div.ThHDze > div.DE3NNc.CekdCb > div.lRwqcd");
+
+if (divElement) {
+  // Create a button element
+  const buttonElement = document.createElement("button");
+  buttonElement.textContent = "Click Me"; // Set the button text
+
+  // Add an event listener to the button
+  buttonElement.addEventListener("click", function () {
+    // Call your custom function when the button is clicked
+    dothething();
+  });
+
+  // Append the button to the div
+  divElement.appendChild(buttonElement);
+}
