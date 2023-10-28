@@ -36,6 +36,7 @@ function triggerFocus(element, text) {
 }
 
 function logForm() {
+    
     let labels = document.querySelectorAll('.M7eMe');
 
     labels.forEach((e, i) => {
@@ -49,8 +50,9 @@ function logForm() {
 
         let placeHolder;
 
-        console.log("...");
-        console.log(label);
+        //console.log("...");
+        //console.log(label);
+        buttonElement.innerHTML = "Read your form...";
 
         if (input) {
             console.log("this is an input tag");
@@ -64,7 +66,7 @@ function logForm() {
             // triggerFocus(input, "i will fill input");
 
             // end filling
-
+            buttonElement.innerHTML = "filling your form";
             formArray[index] = input;
             formData[index] = label.trim();
 
@@ -78,7 +80,7 @@ function logForm() {
             }
 
             // start filling
-
+            buttonElement.innerHTML = "filling your form";
             // triggerFocus(textArea, "i will fill text area");
 
             // end filling
@@ -94,7 +96,8 @@ function logForm() {
 
 function apiCall() {
     // Define the JSON data
-
+    buttonElement.innerHTML = "Calling the API";
+    buttonElement.innerHTML = "API is processing your request";
     formData.emailid = "nisarvskp@gmail.com";
     fetch('https://1a7d-49-249-72-18.ngrok-free.app/api/fillme', {
         method: 'POST',
@@ -103,8 +106,11 @@ function apiCall() {
         },
         body: JSON.stringify(formData) // Convert JSON object to string
     })
+        
         .then(response => response.json())
+        
         .then(data => {
+            buttonElement.innerHTML = "API processed";
             JSON.stringify(data);
             resposeData = data;
             fillForm();
@@ -153,6 +159,7 @@ logForm();
 console.log(formData);
 console.log(formArray);
 apiCall();
+buttonElement.innerHTML = "Magic done!";
 }
 
 // Select the div element
@@ -161,14 +168,18 @@ const divElement = document.querySelector("#mG61Hd > div.RH5hzf.RLS9Fe > div > d
 if (divElement) {
   // Create a button element
   const buttonElement = document.createElement("button");
-  buttonElement.textContent = "Click Me"; // Set the button text
+  buttonElement.textContent = "Lets start the magic";
+  buttonElement.id="doit"; // Set the button text
 
   // Add an event listener to the button
   buttonElement.addEventListener("click", function () {
     // Call your custom function when the button is clicked
     dothething();
+    buttonElement.disabled = true;
+    buttonElement.innerHTML = "Reading your form...";
   });
 
   // Append the button to the div
   divElement.appendChild(buttonElement);
 }
+var buttonElement = document.getElementById("doit");
