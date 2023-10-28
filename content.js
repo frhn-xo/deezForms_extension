@@ -1,5 +1,5 @@
+let formData = {};
 function logForm() {
-    let formData = {};
     let labels = document.querySelectorAll('.M7eMe');
 
     labels.forEach((e, i) => {
@@ -23,7 +23,47 @@ function logForm() {
                 placeHolder.remove();
             }
 
-            input.value = "input filler";
+            // start
+
+            function triggerFocus(element) {
+                // console.log(input);
+                console.log("inside trig func");
+                let eventType = "onfocusin" in element ? "focusin" : "focus";
+                let bubbles = "onfocusin" in element;
+                let event;
+
+                if ("Event" in window) {
+                    event = new Event(eventType, { bubbles: bubbles, cancelable: true });
+                }
+
+                setTimeout(() => {
+                    element.focus();
+                    element.dispatchEvent(event);
+                    console.log("end of settimeout");
+                    // input.value = "input fillu";
+                    function simulateHumanTyping(inputElement, text) {
+                        var inputEvent = new Event('input', { bubbles: true });
+                        var index = 0;
+
+                        function typeCharacter() {
+                            if (index < text.length) {
+                                inputElement.value += text[index];
+                                inputElement.dispatchEvent(inputEvent);
+                                index++;
+                                setTimeout(typeCharacter, 200); // Adjust the timing as needed
+                            }
+                        }
+
+                        typeCharacter();
+                    }
+
+                    simulateHumanTyping(element, "hello");
+                }, 1000);
+            }
+
+            triggerFocus(input);
+
+            // end
 
             formData[index] = { label: label.trim() };
             formData[index].type = "short";
@@ -37,7 +77,48 @@ function logForm() {
                 placeHolder.remove();
             }
 
-            textArea.value = "textarea filler"
+            // textArea.value = "textarea filler"
+            // start
+
+            function triggerFocus(element) {
+                // console.log(input);
+                console.log("inside trig func");
+                let eventType = "onfocusin" in element ? "focusin" : "focus";
+                let bubbles = "onfocusin" in element;
+                let event;
+
+                if ("Event" in window) {
+                    event = new Event(eventType, { bubbles: bubbles, cancelable: true });
+                }
+
+                setTimeout(() => {
+                    element.focus();
+                    element.dispatchEvent(event);
+                    console.log("end of settimeout");
+                    // input.value = "textu fillu";
+                    function simulateHumanTyping(inputElement, text) {
+                        var inputEvent = new Event('input', { bubbles: true });
+                        var index = 0;
+
+                        function typeCharacter() {
+                            if (index < text.length) {
+                                inputElement.value += text[index];
+                                inputElement.dispatchEvent(inputEvent);
+                                index++;
+                                setTimeout(typeCharacter, 200); // Adjust the timing as needed
+                            }
+                        }
+
+                        typeCharacter();
+                    }
+
+                    simulateHumanTyping(element, "hello");
+                }, 1000);
+            }
+
+            triggerFocus(textArea);
+
+            // end
 
             formData[index] = { label: label.trim() };
             formData[index].type = "long";
@@ -46,19 +127,16 @@ function logForm() {
             console.log("nada");
         }
     });
-
-    console.log(formData);
 }
 
 function apicall() {
-    let apiData = {};
 
-    fetch('https://6383-2401-4900-1cb4-c5f-ad4d-a09c-82c8-f496.ngrok-free.app/api/custom', {
+    fetch('http://192.168.234.39:5000/api/custom', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(jsonData)
+        body: JSON.stringify(formData)
     })
         .then(response => response.json())
         .then(data => {
@@ -67,9 +145,11 @@ function apicall() {
         .catch(error => {
             console.log('Error: ' + error);
         });
+    console.log("callin nisar");
 }
 
 console.log("\"brrr deezForms 😶‍🌫️\"");
 
 logForm();
+console.log(formData);
 // apicall();
